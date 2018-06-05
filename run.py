@@ -7,7 +7,7 @@ from progress.bar import Bar
 
 class FancyBar(Bar):
     message = 'Processing'
-    fill = '*'
+    fill = '#'
     suffix = '%(index)d/%(max)d - Elapsed %(elapsed)d  second - remaining %(eta)d second'
 
 def createFolder(directory):
@@ -27,9 +27,13 @@ def parsing_main_page(mainpageURL,min,max,directory):
         mainURL = mainpageURL+'/chuong-'+str(num)
         response = requests.get(mainURL)
         parsed_html = BeautifulSoup(response.text,"html.parser")
+#        print(parsed_html)
+        chapterTitle = parsed_html.find_all(class_="more-chap btn hidden")
+        chapterTitle = re.sub(r'\[<a class=\"more-chap btn hidden\" href=\"javascript:void\(0\);\" onclick=\"(.*)\">',"", str(chapterTitle))
+        chapterTitle = re.sub(r'</a>]',"",str(chapterTitle))
+#        print(chapterTitle)
         aaa = parsed_html.select('div[class*="box-chap box-chap-"]')
-        
-        line = re.sub(r'\[<div class=\"(.*)\">',"", str(aaa))
+        line = re.sub(r'\[<div class=\"(.*)\">',chapterTitle+'\n', str(aaa))
         line = re.sub(r'</div>\]',"", str(line))
         
         f = open(directory+'/demo.txt','w',encoding="utf-8")
