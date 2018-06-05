@@ -1,6 +1,13 @@
 # TangthuvienCrawler
 Crawler novels from truỵen.tangthuvien.vn and push to .txt file for ebook creator 
 
+Require: Python 3.5+
+
+Python dependencies package:
+  pip install requests
+  pip install bs4
+
+
 usage: run.py [-h] [-i MAINURL] [-l START] [-d STOP] [-f DIRECTORY]
 
 optional arguments:
