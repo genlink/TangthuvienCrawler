@@ -3,8 +3,12 @@ import os
 import requests
 from bs4 import BeautifulSoup
 import argparse
-import pathlib
+from progress.bar import Bar
 
+class FancyBar(Bar):
+    message = 'Processing'
+    fill = '*'
+    suffix = '%(index)d/%(max)d - Elapsed %(elapsed)d  second - remaining %(eta)d second'
 
 def createFolder(directory):
     try:
@@ -18,11 +22,11 @@ def parsing_main_page(mainpageURL,min,max,directory):
     createFolder(directory)
     lower = int(min)
     upper = int(max)
+    bar = FancyBar(max=upper)
     for num in range(lower,upper + 1):
         mainURL = mainpageURL+'/chuong-'+str(num)
         response = requests.get(mainURL)
         parsed_html = BeautifulSoup(response.text,"html.parser")
-    #    print(parsed_html)
         aaa = parsed_html.select('div[class*="box-chap box-chap-"]')
         
         line = re.sub(r'\[<div class=\"(.*)\">',"", str(aaa))
@@ -39,6 +43,8 @@ def parsing_main_page(mainpageURL,min,max,directory):
                if i:
                    outfile.write(i)
         os.remove(directory+'/demo.txt')
+        bar.next()
+    bar.finish()
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-i',dest='mainURL',default=[],help='Add novel URL')
