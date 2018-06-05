@@ -3,11 +3,19 @@ import os
 import requests
 from bs4 import BeautifulSoup
 import argparse
+import pathlib
 
+
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+    except OSError:
+        print ('Error: Creating directory. ' +  directory)
 
 
 def parsing_main_page(mainpageURL,min,max,directory):
-
+    createFolder(directory)
     lower = int(min)
     upper = int(max)
     for num in range(lower,upper + 1):
@@ -23,8 +31,7 @@ def parsing_main_page(mainpageURL,min,max,directory):
         f = open(directory+'/demo.txt','w',encoding="utf-8")
         f.write(str(line))
         f.close()
-        if not os.path.exists(directory):
-            os.makedirs(directory)
+
         with open(directory+"/demo.txt","r",encoding="utf-8") as f, open(directory+'/'+str(num).zfill(5)+".txt","w",encoding="utf-8") as outfile:
             for i in f.readlines():
                if not i.strip():
